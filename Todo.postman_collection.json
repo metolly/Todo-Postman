@@ -1,0 +1,394 @@
+{
+	"info": {
+		"_postman_id": "bef3714a-04e8-4f8e-a89f-71d89ea37cde",
+		"name": "Todo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31704802"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "User Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.environment.set(\"firstName\",jsonData.firstName);\r",
+									"pm.environment.set(\"userID\",jsonData.userID);\r",
+									"pm.environment.set(\"accessToken\",jsonData.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"po\",\r\n  \"lastName\": \"fa\",\r\n  \"email\": \"poMostafa4@example.com\",\r\n  \"password\": \"123456789\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/v1/users/register",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate User Name\", function () {\r",
+									"    pm.expect(jsonData.firstName).to.eql(pm.environment.get(\"firstName\"));\r",
+									"});\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"poMostafa@example.com\",\r\n  \"password\": \"123456789\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/v1/users/login",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Todo API",
+			"item": [
+				{
+					"name": "Add Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate User ID\", function () {\r",
+									"    pm.expect(jsonData.userID).to.eql(pm.environment.get(\"userID\"));\r",
+									"});\r",
+									"pm.environment.set(\"isCompleted\",jsonData.isCompleted);\r",
+									"pm.environment.set(\"item\",jsonData.item);\r",
+									"pm.environment.set(\"TaskID\",jsonData._id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"isCompleted\": false,\r\n  \"item\": \"Learn Appium\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/v1/tasks",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate User ID\", function () {\r",
+									"    pm.expect(jsonData.userID).to.eql(pm.environment.get(\"userID\"));\r",
+									"});\r",
+									"pm.test(\"Validate Item Name\", function () {\r",
+									"    pm.expect(jsonData.item).to.eql(pm.environment.get(\"item\"));\r",
+									"});\r",
+									"pm.test(\"Validate Item ID\", function () {\r",
+									"    pm.expect(jsonData._id).to.eql(pm.environment.get(\"TaskID\"));\r",
+									"});\r",
+									"pm.test(\"Validate isCompleted\", function () {\r",
+									"    pm.expect(jsonData.isCompleted).to.eql(pm.environment.get(\"isCompleted\"));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/api/v1/tasks/{{TaskID}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tasks",
+								"{{TaskID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a Specific Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate User ID\", function () {\r",
+									"    pm.expect(jsonData.userID).to.eql(pm.environment.get(\"userID\"));\r",
+									"});\r",
+									"pm.test(\"Validate Updated Task ID\", function () {\r",
+									"    pm.expect(jsonData._id).to.eql(pm.environment.get(\"TaskID\"));\r",
+									"});\r",
+									"pm.environment.set(\"isCompleted\",jsonData.isCompleted);\r",
+									"pm.environment.set(\"item\",jsonData.item);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"isCompleted\": true,\r\n  \"item\": \"Learn Appiujhbvm\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/v1/tasks/{{TaskID}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tasks",
+								"{{TaskID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a Specific Task",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validate User ID\", function () {\r",
+									"    pm.expect(jsonData.userID).to.eql(pm.environment.get(\"userID\"));\r",
+									"});\r",
+									"pm.test(\"Validate Item Name\", function () {\r",
+									"    pm.expect(jsonData.item).to.eql(pm.environment.get(\"item\"));\r",
+									"});\r",
+									"pm.test(\"Validate Item ID\", function () {\r",
+									"    pm.expect(jsonData._id).to.eql(pm.environment.get(\"TaskID\"));\r",
+									"});\r",
+									"pm.test(\"Validate isCompleted\", function () {\r",
+									"    pm.expect(jsonData.isCompleted).to.eql(pm.environment.get(\"isCompleted\"));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/api/v1/tasks/{{TaskID}}",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tasks",
+								"{{TaskID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.test(\"Response time is less than 3000ms\", function () {\r",
+					"    pm.expect(pm.response.responseTime).to.be.below(3000);\r",
+					"});"
+				]
+			}
+		}
+	]
+}
